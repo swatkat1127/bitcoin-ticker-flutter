@@ -11,7 +11,8 @@ class _PriceScreenState extends State<PriceScreen> {
 
   void getDropdownItems(){
     for(int i=0;i<currenciesList.length;i++)
-      print(i);
+      String currency = currenciesList[i];
+       DropdownMenuItem(child: Text(currency),value: currency,);
   }
   @override
   Widget build(BuildContext context) {

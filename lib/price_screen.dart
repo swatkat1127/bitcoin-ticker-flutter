@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bitcoin_ticker/coin_data.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -7,8 +8,14 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = 'INR';
+
+  void getDropdownItems(){
+    for(int i=0;i<currenciesList.length;i++)
+      print(i);
+  }
   @override
   Widget build(BuildContext context) {
+    getDropdownItems();
     return Scaffold(
       appBar: AppBar(
         title: Text('🤑 Coin Ticker'),

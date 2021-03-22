@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bitcoin_ticker/coin_data.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:io'show Platform;
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -9,14 +11,52 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = 'INR';
 
-  void getDropdownItems(){
-    for(int i=0;i<currenciesList.length;i++)
-      String currency = currenciesList[i];
-       DropdownMenuItem(child: Text(currency),value: currency,);
+  DropdownButton<String> androidDropdown() {
+    List<DropdownMenuItem<String>> dropdownItems = [];
+    for (String currency in currenciesList) {
+      var newItem = DropdownMenuItem(
+        child: Text(currency),
+        value: currency,
+      );
+      dropdownItems.add(newItem);
+    }
+    return DropdownButton<String>(
+        value: selectedCurrency,
+        items: dropdownItems,
+        onChanged: (value) {
+          setState(() {
+            selectedCurrency = value;
+          });
+        }
+    );
   }
+
+  CupertinoPicker iOSPicker() {
+    List<Text> pickerItems = [];
+    for (String currency in currenciesList) {
+      pickerItems.add(Text(currency));
+    }
+    return CupertinoPicker(
+      backgroundColor: Colors.lightBlue,
+      itemExtent: 32.0,
+      onSelectedItemChanged: (selectedIndex) {
+        print(selectedIndex);
+      },
+      children: pickerItems,
+    );
+  }
+
+  // ignore: missing_return
+  Widget getPicker(){
+    if(Platform.isIOS){
+      return iOSPicker();
+    } else if(Platform.isAndroid){
+      return androidDropdown();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    getDropdownItems();
     return Scaffold(
       appBar: AppBar(
         title: Text('🤑 Coin Ticker'),
@@ -51,29 +91,18 @@ class _PriceScreenState extends State<PriceScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
-            child: DropdownButton<String>(
-                value: selectedCurrency,
-                items:[
-              DropdownMenuItem(
-                child: Text('USD'), value: 'USD',
-              ),
-              DropdownMenuItem(
-               child: Text('EUR'),value: 'EUR',
-              ),
-              DropdownMenuItem(
-              child: Text('INR'),value: 'INR',
-              ),
-           ],
-            onChanged: (value){
-                  setState(() {
-                    selectedCurrency = value;
-                    print(selectedCurrency);
-                  });
-          },
-            ),
+            child: getPicker(),
           ),
         ],
       ),
     );
   }
 }
+
+// getPickerItems() {
+//   List<Text> pickerItems = [];
+//   for (String currency in currenciesList) {
+//     pickerItems.add(Text(currency));
+//   }
+//   return pickerItems;
+// }
